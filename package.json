@@ -1,0 +1,16 @@
+{
+  "name": "air-plant-monitor",
+  "version": "1.0.0",
+  "description": "AirPlant Monitor is a modern web application that helps users improve their indoor air quality through real-time monitoring and smart plant recommendations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.4",
+    "tailwindcss": "^4.0.4"
+  }
+}
