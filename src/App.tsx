@@ -9,20 +9,89 @@ import {
   Droplets,
   Trees,
   Flower2,
+  MapPin,
 } from "lucide-react";
 
 function App() {
   const [aqi, setAqi] = useState(35);
   const [sunlightLevel, setSunlightLevel] = useState("medium");
   const [showPlantSuggestions, setShowPlantSuggestions] = useState(false);
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [showAQI, setShowAQI] = useState(false);
+
+  // Sample states and cities (you can expand this list)
+  const states = [
+    "Andhra_Pradesh",
+    "Arunachal_Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal_Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya_Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil_Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar_Pradesh",
+    "Uttarakhand",
+    "West_Bengal",
+  ];
+
+  const cities = {
+    Andhra_Pradesh: ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
+    Arunachal_Pradesh: ["Itanagar", "Tawang", "Ziro", "Pasighat"],
+    Assam: ["Guwahati", "Dibrugarh", "Silchar", "Jorhat"],
+    Bihar: ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur"],
+    Chhattisgarh: ["Raipur", "Bilaspur", "Durg", "Korba"],
+    Goa: ["Panaji", "Margao", "Vasco da Gama", "Mapusa"],
+    Gujarat: ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+    Haryana: ["Gurgaon", "Faridabad", "Panipat", "Ambala"],
+    Himachal_Pradesh: ["Shimla", "Manali", "Dharamshala", "Mandi"],
+    Jharkhand: ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro"],
+    Karnataka: ["Bengaluru", "Mysuru", "Mangalore", "Hubli"],
+    Kerala: ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur"],
+    Madhya_Pradesh: ["Bhopal", "Indore", "Gwalior", "Jabalpur"],
+    Maharashtra: ["Mumbai", "Pune", "Nagpur", "Nashik"],
+    Manipur: ["Imphal", "Thoubal", "Bishnupur", "Churachandpur"],
+    Meghalaya: ["Shillong", "Tura", "Jowai", "Nongpoh"],
+    Mizoram: ["Aizawl", "Lunglei", "Champhai", "Serchhip"],
+    Nagaland: ["Kohima", "Dimapur", "Mokokchung", "Zunheboto"],
+    Odisha: ["Bhubaneswar", "Cuttack", "Rourkela", "Sambalpur"],
+    Punjab: ["Ludhiana", "Amritsar", "Jalandhar", "Patiala"],
+    Rajasthan: ["Jaipur", "Jodhpur", "Udaipur", "Kota"],
+    Sikkim: ["Gangtok", "Namchi", "Gyalshing", "Mangan"],
+    Tamil_Nadu: ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli"],
+    Telangana: ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar"],
+    Tripura: ["Agartala", "Udaipur", "Dharmanagar", "Kailashahar"],
+    Uttar_Pradesh: ["Lucknow", "Kanpur", "Varanasi", "Agra"],
+    Uttarakhand: ["Dehradun", "Haridwar", "Nainital", "Haldwani"],
+    West_Bengal: ["Kolkata", "Siliguri", "Durgapur", "Asansol"],
+  };
 
   // Simulate AQI changes
   useEffect(() => {
-    const interval = setInterval(() => {
-      setAqi((prev) => prev + (Math.random() > 0.5 ? 1 : -1));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    if (showAQI) {
+      const interval = setInterval(() => {
+        setAqi((prev) => prev + (Math.random() > 0.5 ? 1 : -1));
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [showAQI]);
 
   const getAqiInfo = (value: number) => {
     if (value <= 50)
@@ -72,6 +141,12 @@ function App() {
       suggestion:
         "Health warnings of emergency conditions. Avoid all outdoor activities!",
     };
+  };
+
+  const handleLocationSubmit = () => {
+    if (selectedState && selectedCity) {
+      setShowAQI(true);
+    }
   };
 
   const aqiInfo = getAqiInfo(aqi);
@@ -170,101 +245,167 @@ function App() {
         {/* Header */}
         <header className="flex items-center justify-between mb-12 animate-slide-down">
           <div className="flex items-center gap-2">
-            <Leaf className="text-emerald-600 h-8 w-8" />
+            <Leaf className="text-emerald-600 h-8 w-8 animate-spin-slow" />
             <h1 className="text-3xl font-bold text-emerald-800">
               AirPlant Monitor
             </h1>
           </div>
         </header>
 
-        {/* Main Content */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* AQI Monitor */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg transform transition-all hover:scale-[1.02] animate-fade-in">
-            <div className="flex items-center gap-3 mb-6">
-              <Wind className="text-emerald-600 h-6 w-6 animate-breeze" />
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Real-time AQI
-              </h2>
-            </div>
-            <div className="text-center mb-6">
-              <div
-                className={`text-6xl font-bold mb-4 transition-all transform hover:scale-110 ${aqiInfo.color}`}
-              >
-                {Math.round(aqi)}
-              </div>
-              <div
-                className={`inline-block px-4 py-2 rounded-full ${aqiInfo.bgColor} ${aqiInfo.color} font-semibold mb-4 animate-pulse-slow`}
-              >
-                {aqiInfo.level}
-              </div>
-              <p className="text-gray-600">{aqiInfo.suggestion}</p>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-              <div
-                className="h-2.5 rounded-full transition-all duration-500 animate-expand"
-                style={{
-                  width: `${Math.min((aqi / 500) * 100, 100)}%`,
-                  backgroundColor: getComputedStyle(
-                    document.documentElement
-                  ).getPropertyValue(`--${aqiInfo.color.split("-")[1]}-500`),
-                }}
-              ></div>
-            </div>
+        {/* Location Selector */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg mb-8 animate-fade-in">
+          <div className="flex items-center gap-3 mb-6">
+            <MapPin className="text-emerald-600 h-6 w-6" />
+            <h2 className="text-2xl font-semibold text-gray-800">
+              Select Location
+            </h2>
           </div>
-
-          {/* Plant Suggestion */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg animate-fade-in-delayed">
-            <div className="flex items-center gap-3 mb-6">
-              <Plant className="text-emerald-600 h-6 w-6 animate-sway" />
-              <h2 className="text-2xl font-semibold text-gray-800">
-                Plant Suggestions
-              </h2>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-gray-700 mb-2">
-                Select Sunlight Level
-              </label>
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="block text-gray-700 mb-2">State</label>
               <select
-                value={sunlightLevel}
-                onChange={(e) => setSunlightLevel(e.target.value)}
+                value={selectedState}
+                onChange={(e) => {
+                  setSelectedState(e.target.value);
+                  setSelectedCity("");
+                  setShowAQI(false);
+                }}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               >
-                <option value="low">Low Light</option>
-                <option value="medium">Medium Light</option>
-                <option value="high">High Light</option>
+                <option value="">Select State</option>
+                {states.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
               </select>
             </div>
-
-            <button
-              onClick={() => setShowPlantSuggestions(true)}
-              className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 hover:scale-[1.02] transform transition-transform"
-            >
-              <Search className="h-5 w-5" />
-              Find Perfect Plants
-            </button>
-
-            {showPlantSuggestions && (
-              <div className="mt-6 space-y-4">
-                {plantSuggestions[
-                  sunlightLevel as keyof typeof plantSuggestions
-                ].map((plant, index) => (
-                  <div
-                    key={index}
-                    className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 animate-slide-up hover:shadow-md transition-shadow"
-                    style={{ animationDelay: `${index * 150}ms` }}
-                  >
-                    <h3 className="font-semibold text-emerald-800">
-                      {plant.name}
-                    </h3>
-                    <p className="text-sm text-gray-600">{plant.description}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div>
+              <label className="block text-gray-700 mb-2">City</label>
+              <select
+                value={selectedCity}
+                onChange={(e) => {
+                  setSelectedCity(e.target.value);
+                  setShowAQI(false);
+                }}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                disabled={!selectedState}
+              >
+                <option value="">Select City</option>
+                {selectedState &&
+                  cities[selectedState as keyof typeof cities].map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+              </select>
+            </div>
           </div>
+          <button
+            onClick={handleLocationSubmit}
+            disabled={!selectedState || !selectedCity}
+            className={`w-full py-3 rounded-lg transition-all flex items-center justify-center gap-2 ${
+              !selectedState || !selectedCity
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-emerald-600 hover:bg-emerald-700 text-white hover:scale-[1.02] transform"
+            }`}
+          >
+            Show Air Quality
+          </button>
         </div>
+
+        {/* Main Content */}
+        {showAQI && (
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* AQI Monitor */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg transform transition-all hover:scale-[1.02] animate-fade-in">
+              <div className="flex items-center gap-3 mb-6">
+                <Wind className="text-emerald-600 h-6 w-6 animate-breeze" />
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Real-time AQI for {selectedCity}, {selectedState}
+                </h2>
+              </div>
+              <div className="text-center mb-6">
+                <div
+                  className={`text-6xl font-bold mb-4 transition-all transform hover:scale-110 ${aqiInfo.color}`}
+                >
+                  {Math.round(aqi)}
+                </div>
+                <div
+                  className={`inline-block px-4 py-2 rounded-full ${aqiInfo.bgColor} ${aqiInfo.color} font-semibold mb-4 animate-pulse-slow`}
+                >
+                  {aqiInfo.level}
+                </div>
+                <p className="text-gray-600">{aqiInfo.suggestion}</p>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                <div
+                  className="h-2.5 rounded-full transition-all duration-500 animate-expand"
+                  style={{
+                    width: `${Math.min((aqi / 500) * 100, 100)}%`,
+                    backgroundColor: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue(`--${aqiInfo.color.split("-")[1]}-500`),
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Plant Suggestion */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg animate-fade-in-delayed">
+              <div className="flex items-center gap-3 mb-6">
+                <Plant className="text-emerald-600 h-6 w-6 animate-sway" />
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  Plant Suggestions
+                </h2>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-gray-700 mb-2">
+                  Select Sunlight Level
+                </label>
+                <select
+                  value={sunlightLevel}
+                  onChange={(e) => setSunlightLevel(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                >
+                  <option value="low">Low Light</option>
+                  <option value="medium">Medium Light</option>
+                  <option value="high">High Light</option>
+                </select>
+              </div>
+
+              <button
+                onClick={() => setShowPlantSuggestions(true)}
+                className="w-full bg-emerald-600 text-white py-3 rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2 hover:scale-[1.02] transform transition-transform"
+              >
+                <Search className="h-5 w-5" />
+                Find Perfect Plants
+              </button>
+
+              {showPlantSuggestions && (
+                <div className="mt-6 space-y-4">
+                  {plantSuggestions[
+                    sunlightLevel as keyof typeof plantSuggestions
+                  ].map((plant, index) => (
+                    <div
+                      key={index}
+                      className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 animate-slide-up hover:shadow-md transition-shadow"
+                      style={{ animationDelay: `${index * 150}ms` }}
+                    >
+                      <h3 className="font-semibold text-emerald-800">
+                        {plant.name}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {plant.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Room Scanner CTA */}
         <div className="mt-8 bg-gradient-to-r from-emerald-600 to-green-500 rounded-2xl p-8 text-white text-center animate-fade-in-up backdrop-blur-sm">
