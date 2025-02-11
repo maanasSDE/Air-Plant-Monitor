@@ -5,8 +5,6 @@ import {
   Wind,
   Plane as Plant,
   Search,
-  ChevronDown,
-  AlertTriangle,
   Cloud,
   Droplets,
   Trees,
@@ -172,7 +170,7 @@ function App() {
         {/* Header */}
         <header className="flex items-center justify-between mb-12 animate-slide-down">
           <div className="flex items-center gap-2">
-            <Leaf className="text-emerald-600 h-8 w-8 animate-spin-slow" />
+            <Leaf className="text-emerald-600 h-8 w-8" />
             <h1 className="text-3xl font-bold text-emerald-800">
               AirPlant Monitor
             </h1>
@@ -270,9 +268,10 @@ function App() {
 
         {/* Room Scanner CTA */}
         <div className="mt-8 bg-gradient-to-r from-emerald-600 to-green-500 rounded-2xl p-8 text-white text-center animate-fade-in-up backdrop-blur-sm">
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-3xl font-bold mb-4">Comming Soon!!</h2>
+          <h3 className="text-xl font-bold mb-4">
             Want a personalized analysis?
-          </h2>
+          </h3>
           <p className="mb-6">
             Use our room scanner to get detailed sunlight measurements and plant
             recommendations
