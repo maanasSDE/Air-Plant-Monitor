@@ -11,6 +11,7 @@ import {
   Flower2,
   MapPin,
 } from "lucide-react";
+import axios from "axios";
 
 function App() {
   const [aqi, setAqi] = useState(35);
@@ -19,6 +20,11 @@ function App() {
   const [selectedState, setSelectedState] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [showAQI, setShowAQI] = useState(false);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const apiKey = import.meta.env.VITE_API_KEY;
+  const url = `https://api.data.gov.in/resource/3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69?api-key=${apiKey}&format=json&filters%5Bstate%5D=Uttarakhand&filters%5Bcity%5D=Roorkee`;
 
   // Sample states and cities (you can expand this list)
   const states = [
@@ -619,6 +625,20 @@ function App() {
       return () => clearInterval(interval);
     }
   }, [showAQI]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(url);
+        console.log(response);
+        setData(response.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [url]);
 
   const getAqiInfo = (value: number) => {
     if (value <= 50)
