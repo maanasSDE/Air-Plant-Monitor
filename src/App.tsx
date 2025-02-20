@@ -22,7 +22,6 @@ function App() {
   const [showAQI, setShowAQI] = useState(false);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const apiKey = import.meta.env.VITE_API_KEY;
   const url = `https://api.data.gov.in/resource/3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69?api-key=${apiKey}&format=json&filters%5Bstate%5D=Uttarakhand&filters%5Bcity%5D=Roorkee`;
 
@@ -617,28 +616,24 @@ function App() {
   };
 
   // Simulate AQI changes
-  useEffect(() => {
-    if (showAQI) {
-      const interval = setInterval(() => {
-        setAqi((prev) => prev + (Math.random() > 0.5 ? 1 : -1));
-      }, 3000);
-      return () => clearInterval(interval);
+  // useEffect(() => {
+  //   if (showAQI) {
+  //     const interval = setInterval(() => {
+  //       setAqi((prev) => prev + (Math.random() > 0.5 ? 1 : -1));
+  //     }, 3000);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [showAQI]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(url);
+      const apiValue = response.data.data.aqi;
+      setAqi(apiValue);
+    } finally {
+      setLoading(false);
     }
-  }, [showAQI]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(url);
-        console.log(response);
-        setData(response.data);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [url]);
+  };
 
   const getAqiInfo = (value: number) => {
     if (value <= 50)
@@ -692,6 +687,7 @@ function App() {
 
   const handleLocationSubmit = () => {
     if (selectedState && selectedCity) {
+      fetchData();
       setShowAQI(true);
     }
   };
