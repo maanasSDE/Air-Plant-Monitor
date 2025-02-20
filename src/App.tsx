@@ -23,7 +23,8 @@ function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const apiKey = import.meta.env.VITE_API_KEY;
-  const url = `https://api.data.gov.in/resource/3b01bcb8-0b14-4abf-b6f2-c1bfd384ba69?api-key=${apiKey}&format=json&filters%5Bstate%5D=Uttarakhand&filters%5Bcity%5D=Roorkee`;
+
+  const url = `https://api.waqi.info/feed/${selectedCity}/?token=${apiKey}`;
 
   // Sample states and cities (you can expand this list)
   const states = [
