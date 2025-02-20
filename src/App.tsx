@@ -882,17 +882,6 @@ function App() {
                 </div>
                 <p className="text-gray-600">{aqiInfo.suggestion}</p>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                <div
-                  className="h-2.5 rounded-full transition-all duration-500 animate-expand"
-                  style={{
-                    width: `${Math.min((aqi / 500) * 100, 100)}%`,
-                    backgroundColor: getComputedStyle(
-                      document.documentElement
-                    ).getPropertyValue(`--${aqiInfo.color.split("-")[1]}-500`),
-                  }}
-                ></div>
-              </div>
             </div>
 
             {/* Plant Suggestion */}
