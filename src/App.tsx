@@ -700,6 +700,7 @@ function App() {
       {
         name: "Snake Plant",
         description: "Excellent air purifier, tolerates low light",
+        link: "https://en.wikipedia.org/wiki/Sansevieria",
       },
       {
         name: "ZZ Plant",
