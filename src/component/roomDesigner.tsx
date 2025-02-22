@@ -80,4 +80,19 @@ export default function RoomDesigner() {
     row: number;
     col: number;
   } | null>(null);
-}
+
+  const tools = [
+    { type: 'wall', icon: Square, label: 'Wall' },
+    { type: 'door', icon: Door, label: 'Door' },
+    { type: 'window', icon: Window, label: 'Window' },
+    { type: 'cooking', icon: CookingPot, label: 'Cooking Area' },
+  ] as const;
+
+  const handleCellClick = (row: number, col: number) => {
+    const newGrid = [...grid];
+    newGrid[row][col] = { type: selectedTool };
+    setGrid(newGrid);
+    setSelectedCell(null);
+  };
+
+
