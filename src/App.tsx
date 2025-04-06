@@ -12,6 +12,7 @@ import {
   MapPin,
 } from "lucide-react";
 import axios from "axios";
+import RoomDesigner from "./component/roomDesigner";
 
 function App() {
   const [aqi, setAqi] = useState(35);
@@ -23,6 +24,7 @@ function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const apiKey = import.meta.env.VITE_API_KEY;
+  const [showRoomDesigner, setShowRoomDesigner] = useState(false);
 
   const url = `https://api.waqi.info/feed/${selectedCity}/?token=${apiKey}`;
 
@@ -790,7 +792,7 @@ function App() {
         {/* Header */}
         <header className="flex items-center justify-between mb-12 animate-slide-down">
           <div className="flex items-center gap-2">
-            <Leaf className="text-emerald-600 h-8 w-8" />
+            <Leaf className="text-emerald-600 h-8 w-8 animate-spin-slow" />
             <h1 className="text-3xl font-bold text-emerald-800">
               AirPlant Monitor
             </h1>
@@ -883,6 +885,17 @@ function App() {
                 </div>
                 <p className="text-gray-600">{aqiInfo.suggestion}</p>
               </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                <div
+                  className="h-2.5 rounded-full transition-all duration-500 animate-expand"
+                  style={{
+                    width: `${Math.min((aqi / 500) * 100, 100)}%`,
+                    backgroundColor: getComputedStyle(
+                      document.documentElement
+                    ).getPropertyValue(`--${aqiInfo.color.split("-")[1]}-500`),
+                  }}
+                ></div>
+              </div>
             </div>
 
             {/* Plant Suggestion */}
@@ -941,12 +954,24 @@ function App() {
           </div>
         )}
 
+        {/* Room Designer Section */}
+        <div className="mt-8">
+          <button
+            onClick={() => setShowRoomDesigner(!showRoomDesigner)}
+            className="w-full bg-emerald-600 text-white py-4 rounded-lg font-semibold hover:bg-emerald-700 transition-all mb-8 flex items-center justify-center gap-2"
+          >
+            <MapPin className="h-5 w-5" />
+            {showRoomDesigner ? "Hide Room Designer" : "Design Your Room"}
+          </button>
+
+          {showRoomDesigner && <RoomDesigner />}
+        </div>
+
         {/* Room Scanner CTA */}
         <div className="mt-8 bg-gradient-to-r from-emerald-600 to-green-500 rounded-2xl p-8 text-white text-center animate-fade-in-up backdrop-blur-sm">
-          <h2 className="text-3xl font-bold mb-4">Comming Soon!!</h2>
-          <h3 className="text-xl font-bold mb-4">
+          <h2 className="text-2xl font-bold mb-4">
             Want a personalized analysis?
-          </h3>
+          </h2>
           <p className="mb-6">
             Use our room scanner to get detailed sunlight measurements and plant
             recommendations
